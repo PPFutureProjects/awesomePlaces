@@ -1,5 +1,9 @@
+import { SetLocation } from '../set-location/set-location';
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, ModalController } from 'ionic-angular';
+import { Location } from '../../models/location'
+import { Camera } from '@ionic-native/camera';
+
 
 /**
  * Generated class for the AddPlace page.
@@ -14,7 +18,23 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
 })
 export class AddPlace {
 
-  constructor(public navCtrl: NavController, public navParams: NavParams) {
+  location: Location = new Location(-3.730868, -38.520718);
+  locationIsSet :boolean =false
+
+  constructor(public navCtrl: NavController, public navParams: NavParams, private modelCtrl: ModalController) {
+  }
+
+  onOpenMap() {
+    const modal = this.modelCtrl.create('SetLocation', { "location": this.location , isSet : this.locationIsSet })
+      modal.onDidDismiss(data =>{
+        if(data){
+          this.location = data.location;
+          this.locationIsSet=true;
+          console.log(data.location)
+        }
+      })
+      modal.present()
+      
   }
 
   ionViewDidLoad() {
